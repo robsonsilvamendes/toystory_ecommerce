@@ -6,7 +6,7 @@ on:
 
 env:
   MOTHERDUCK_TOKEN: ${{ secrets.MOTHERDUCK_TOKEN }}
-  DBT_PROJECT_DIR: dbt_toystore_ecommerce
+  DBT_SUBDIR: dbt_toystore_ecommerce
 
 jobs:
   dbt-cd:
@@ -27,17 +27,17 @@ jobs:
         run: pip install -r requirements.txt
 
       - name: dbt deps
-        working-directory: ${{ env.DBT_PROJECT_DIR }}
+        working-directory: ${{ env.DBT_SUBDIR }}
         run: dbt deps --profiles-dir .
 
       - name: dbt seed
-        working-directory: ${{ env.DBT_PROJECT_DIR }}
+        working-directory: ${{ env.DBT_SUBDIR }}
         run: dbt seed --profiles-dir . --target prod
 
       - name: dbt run
-        working-directory: ${{ env.DBT_PROJECT_DIR }}
+        working-directory: ${{ env.DBT_SUBDIR }}
         run: dbt run --profiles-dir . --target prod
 
       - name: dbt test
-        working-directory: ${{ env.DBT_PROJECT_DIR }}
+        working-directory: ${{ env.DBT_SUBDIR }}
         run: dbt test --profiles-dir . --target prod
