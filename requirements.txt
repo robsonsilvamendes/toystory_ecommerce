@@ -1,0 +1,6 @@
+#dbt-core==1.11.7
+duckdb==1.4.4
+dbt-duckdb==1.10.0
+pandas==3.0.1
+setuptools==82.0.1
+sqlfluff==4.0.4
