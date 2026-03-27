@@ -1,0 +1,14 @@
+version: 2
+
+sources:
+  - name: toystore_ecommerce
+    description: "Source data for the toy store ecommerce project."
+    schema: main
+    tables:
+      - name: website_sessions
+      - name: website_pageviews
+      - name: products
+      - name: order_item_refunds
+      - name: order_items
+      - name: orders
+      - name: maven_fuzzy_factory_data_dictionary

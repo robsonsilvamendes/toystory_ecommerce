@@ -1,0 +1,43 @@
+name: dbt CI
+
+on:
+  pull_request:
+    branches: [main]
+
+env:
+  MOTHERDUCK_TOKEN: ${{ secrets.MOTHERDUCK_TOKEN }}
+  DBT_PROJECT_DIR: dbt_toystore_ecommerce
+
+jobs:
+  dbt-ci:
+    name: dbt Build & Test (CI)
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout do código
+        uses: actions/checkout@v4
+
+      - name: Setup Python 3.11
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+          cache: 'pip'
+
+      - name: Instalar dependências Python
+        run: pip install -r requirements.txt
+
+      - name: dbt deps
+        working-directory: ${{ env.DBT_PROJECT_DIR }}
+        run: dbt deps --profiles-dir .
+
+      - name: dbt seed
+        working-directory: ${{ env.DBT_PROJECT_DIR }}
+        run: dbt seed --profiles-dir . --target ci
+
+      - name: dbt build
+        working-directory: ${{ env.DBT_PROJECT_DIR }}
+        run: dbt build --profiles-dir . --target ci
+
+      - name: dbt test
+        working-directory: ${{ env.DBT_PROJECT_DIR }}
+        run: dbt test --profiles-dir . --target ci
