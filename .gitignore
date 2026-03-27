@@ -1,0 +1,21 @@
+# Python
+.venv/
+__pycache__/
+*.pyc
+
+# dbt
+target/
+dbt_packages/
+logs/
+dados/
+seeds/
+
+# Secrets
+.env
+
+# macOS
+.DS_Store
+._*
+
+# Docs (artefatos de conversação)
+docs/

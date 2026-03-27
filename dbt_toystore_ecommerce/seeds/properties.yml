@@ -1,0 +1,13 @@
+#version: 2
+
+#seeds:
+#  - name: orders
+#    config:
+#      column_types:
+#        order_id: varchar(20)
+
+#  - name: order_items
+#    config:
+#      column_types:
+#        order_item_id: varchar(20)
+#        order_id: varchar(20)

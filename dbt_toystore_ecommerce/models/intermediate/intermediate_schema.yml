@@ -1,0 +1,50 @@
+version: 2
+
+models:
+  - name: int_order_items_with_refunds
+    description: "Items de pedido enriquecidos com dados de reembolso. Cada linha representa um item de pedido com flag indicando se foi reembolsado."
+    columns:
+      - name: order_item_id
+        description: "Identificador único do item do pedido (PK)"
+        tests:
+          - unique
+          - not_null
+      - name: created_at
+        description: "Timestamp de criação do item"
+      - name: order_id
+        description: "Identificador do pedido (FK)"
+        tests:
+          - not_null
+      - name: product_id
+        description: "Identificador do produto (FK)"
+        tests:
+          - not_null
+      - name: is_primary_item
+        description: "Flag indicando se é o item principal do pedido (1=sim, 0=não)"
+      - name: price_usd
+        description: "Preço do item em USD"
+      - name: cogs_usd
+        description: "Custo do produto vendido em USD"
+      - name: order_item_refund_id
+        description: "Identificador do reembolso (NULL se não reembolsado)"
+      - name: refund_created_at
+        description: "Timestamp do reembolso (NULL se não reembolsado)"
+      - name: refund_amount_usd
+        description: "Valor do reembolso em USD (NULL se não reembolsado)"
+      - name: is_refunded
+        description: "Flag booleana: TRUE se o item foi reembolsado"
+
+  - name: int_session_pageviews
+    description: "Métricas de pageviews agregadas por sessão. Inclui landing page, exit page e total de pageviews."
+    columns:
+      - name: website_session_id
+        description: "Identificador único da sessão (PK)"
+        tests:
+          - unique
+          - not_null
+      - name: total_pageviews
+        description: "Número total de pageviews na sessão"
+      - name: landing_page
+        description: "URL da primeira página visitada na sessão"
+      - name: exit_page
+        description: "URL da última página visitada na sessão"

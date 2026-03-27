@@ -1,0 +1,157 @@
+version: 2
+
+models:
+  - name: fct_orders
+    description: "Tabela fato de pedidos. Cada linha representa um pedido completo com dados financeiros, atribuição de tráfego e flags de reembolso."
+    columns:
+      - name: order_id
+        description: "Identificador único do pedido (PK)"
+        tests:
+          - unique
+          - not_null
+      - name: created_at
+        description: "Timestamp de criação do pedido"
+        tests:
+          - not_null
+      - name: website_session_id
+        description: "Identificador da sessão web que gerou o pedido (FK)"
+      - name: user_id
+        description: "Identificador do usuário que fez o pedido (FK)"
+        tests:
+          - not_null
+      - name: primary_product_id
+        description: "Identificador do produto principal do pedido (FK)"
+        tests:
+          - not_null
+          - relationships:
+              to: ref('dim_products')
+              field: product_id
+      - name: primary_product_name
+        description: "Nome do produto principal"
+      - name: items_purchased
+        description: "Quantidade de itens comprados no pedido"
+      - name: price_usd
+        description: "Valor total do pedido em USD"
+      - name: cogs_usd
+        description: "Custo dos produtos vendidos em USD"
+      - name: profit_usd
+        description: "Lucro bruto (price - cogs) em USD"
+      - name: total_refund_usd
+        description: "Valor total reembolsado em USD"
+      - name: net_revenue_usd
+        description: "Receita líquida (price - reembolsos) em USD"
+      - name: utm_source
+        description: "Fonte de tráfego UTM"
+      - name: utm_campaign
+        description: "Campanha de marketing UTM"
+      - name: utm_content
+        description: "Conteúdo/variante do anúncio UTM"
+      - name: device_type
+        description: "Tipo de dispositivo (mobile/desktop)"
+      - name: http_referer
+        description: "URL de referência"
+      - name: is_repeat_session
+        description: "Flag indicando se a sessão é de retorno"
+      - name: is_refunded
+        description: "Flag: TRUE se algum item do pedido foi reembolsado"
+      - name: total_items_refunded
+        description: "Quantidade de itens reembolsados no pedido"
+
+  - name: fct_website_sessions
+    description: "Tabela fato de sessões web. Cada linha representa uma sessão com dados de tráfego, engajamento e conversão."
+    columns:
+      - name: website_session_id
+        description: "Identificador único da sessão (PK)"
+        tests:
+          - unique
+          - not_null
+      - name: created_at
+        description: "Timestamp de início da sessão"
+        tests:
+          - not_null
+      - name: user_id
+        description: "Identificador do usuário (FK)"
+        tests:
+          - not_null
+      - name: is_repeat_session
+        description: "Flag indicando se é uma sessão de retorno"
+      - name: utm_source
+        description: "Fonte de tráfego UTM"
+      - name: utm_campaign
+        description: "Campanha de marketing UTM"
+      - name: utm_content
+        description: "Conteúdo/variante do anúncio UTM"
+      - name: device_type
+        description: "Tipo de dispositivo (mobile/desktop)"
+      - name: http_referer
+        description: "URL de referência"
+      - name: total_pageviews
+        description: "Total de páginas visualizadas na sessão"
+      - name: landing_page
+        description: "URL da primeira página visitada"
+      - name: exit_page
+        description: "URL da última página visitada"
+      - name: order_id
+        description: "Identificador do pedido gerado (NULL se não converteu)"
+      - name: is_converted
+        description: "Flag: TRUE se a sessão gerou um pedido"
+      - name: order_price_usd
+        description: "Valor do pedido em USD (NULL se não converteu)"
+      - name: order_items_purchased
+        description: "Itens comprados no pedido (NULL se não converteu)"
+
+  - name: dim_products
+    description: "Dimensão de produtos enriquecida com métricas agregadas de vendas e reembolsos."
+    columns:
+      - name: product_id
+        description: "Identificador único do produto (PK)"
+        tests:
+          - unique
+          - not_null
+      - name: product_name
+        description: "Nome do produto"
+        tests:
+          - not_null
+      - name: created_at
+        description: "Data de lançamento do produto"
+      - name: total_orders
+        description: "Total de pedidos contendo este produto"
+      - name: total_revenue_usd
+        description: "Receita total gerada pelo produto em USD"
+      - name: total_refunds
+        description: "Total de itens reembolsados deste produto"
+      - name: refund_rate_pct
+        description: "Taxa de reembolso em percentual"
+
+  - name: dim_users
+    description: "Dimensão de usuários com métricas de comportamento, atribuição de primeiro toque e flags de retenção."
+    columns:
+      - name: user_id
+        description: "Identificador único do usuário (PK)"
+        tests:
+          - unique
+          - not_null
+      - name: first_session_at
+        description: "Timestamp da primeira sessão do usuário"
+        tests:
+          - not_null
+      - name: first_order_at
+        description: "Timestamp do primeiro pedido (NULL se nunca comprou)"
+      - name: total_sessions
+        description: "Total de sessões do usuário"
+      - name: total_orders
+        description: "Total de pedidos realizados"
+      - name: total_revenue_usd
+        description: "Receita total gerada pelo usuário em USD"
+      - name: first_utm_source
+        description: "Fonte UTM da primeira sessão"
+      - name: first_utm_campaign
+        description: "Campanha UTM da primeira sessão"
+      - name: first_utm_content
+        description: "Conteúdo UTM da primeira sessão"
+      - name: first_device_type
+        description: "Tipo de dispositivo da primeira sessão"
+      - name: first_http_referer
+        description: "URL de referência da primeira sessão"
+      - name: is_repeat_customer
+        description: "Flag: TRUE se o usuário fez mais de 1 pedido"
