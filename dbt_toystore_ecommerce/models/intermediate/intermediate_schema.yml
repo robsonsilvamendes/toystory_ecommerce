@@ -3,48 +3,69 @@ version: 2
 models:
   - name: int_order_items_with_refunds
     description: "Items de pedido enriquecidos com dados de reembolso. Cada linha representa um item de pedido com flag indicando se foi reembolsado."
+    config:
+      contract:
+        enforced: true
     columns:
       - name: order_item_id
         description: "Identificador único do item do pedido (PK)"
+        data_type: bigint
         tests:
           - unique
           - not_null
       - name: created_at
         description: "Timestamp de criação do item"
+        data_type: timestamp
       - name: order_id
         description: "Identificador do pedido (FK)"
+        data_type: bigint
         tests:
           - not_null
       - name: product_id
         description: "Identificador do produto (FK)"
+        data_type: bigint
         tests:
           - not_null
       - name: is_primary_item
         description: "Flag indicando se é o item principal do pedido (1=sim, 0=não)"
+        data_type: bigint
       - name: price_usd
         description: "Preço do item em USD"
+        data_type: double
       - name: cogs_usd
         description: "Custo do produto vendido em USD"
+        data_type: double
       - name: order_item_refund_id
         description: "Identificador do reembolso (NULL se não reembolsado)"
+        data_type: bigint
       - name: refund_created_at
         description: "Timestamp do reembolso (NULL se não reembolsado)"
+        data_type: timestamp
       - name: refund_amount_usd
         description: "Valor do reembolso em USD (NULL se não reembolsado)"
+        data_type: double
       - name: is_refunded
         description: "Flag booleana: TRUE se o item foi reembolsado"
+        data_type: boolean
 
   - name: int_session_pageviews
     description: "Métricas de pageviews agregadas por sessão. Inclui landing page, exit page e total de pageviews."
+    config:
+      contract:
+        enforced: true
     columns:
       - name: website_session_id
         description: "Identificador único da sessão (PK)"
+        data_type: bigint
         tests:
           - unique
           - not_null
       - name: total_pageviews
         description: "Número total de pageviews na sessão"
+        data_type: bigint
       - name: landing_page
         description: "URL da primeira página visitada na sessão"
+        data_type: varchar
       - name: exit_page
         description: "URL da última página visitada na sessão"
+        data_type: varchar
